@@ -1,0 +1,279 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PawFinder — Reunite Lost Pets With Their Families</title>
+  <meta name="description" content="PawFinder helps communities report, map, and match lost and found pets so they get home faster. Built for AnimalHack 2026." />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%90%BE%3C/text%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <a class="brand" href="#" data-nav="home">
+        <span class="brand-mark" aria-hidden="true">🐾</span>
+        <span class="brand-text">Paw<strong>Finder</strong></span>
+      </a>
+      <nav class="main-nav" aria-label="Primary">
+        <button class="nav-link" data-nav="map">Live Map</button>
+        <button class="nav-link" data-nav="browse">Browse</button>
+        <button class="nav-link" data-nav="how">How it works</button>
+      </nav>
+      <div class="header-actions">
+        <button class="btn btn-ghost" data-report="found">I found a pet</button>
+        <button class="btn btn-primary" data-report="lost">Report lost pet</button>
+      </div>
+    </div>
+  </header>
+
+  <main id="app">
+    <!-- HERO -->
+    <section class="hero" data-view="home">
+      <div class="wrap hero-grid">
+        <div class="hero-copy">
+          <p class="eyebrow">AnimalHack 2026 · Community pet recovery</p>
+          <h1>Every lost pet deserves a way home.</h1>
+          <p class="lead">
+            PawFinder turns scattered "have you seen my dog" posts into one living map.
+            Report a lost or found animal in under a minute, and our matcher instantly
+            surfaces the sightings most likely to be your pet.
+          </p>
+          <div class="hero-cta">
+            <button class="btn btn-primary btn-lg" data-report="lost">Report a lost pet</button>
+            <button class="btn btn-ghost btn-lg" data-report="found">I found a pet</button>
+          </div>
+          <dl class="stat-row" id="heroStats">
+            <div><dt>Active reports</dt><dd data-stat="active">—</dd></div>
+            <div><dt>Reunited</dt><dd data-stat="reunited">—</dd></div>
+            <div><dt>Match rate</dt><dd data-stat="rate">—</dd></div>
+          </dl>
+        </div>
+        <div class="hero-art" aria-hidden="true">
+          <div class="art-card art-card-1">
+            <span class="pin pin-lost">🔴</span>
+            <div><strong>Mochi</strong><small>Lost · Shiba Inu · Maple Park</small></div>
+          </div>
+          <div class="art-card art-card-2">
+            <span class="pin pin-found">🟢</span>
+            <div><strong>Found tabby</strong><small>Near Riverside &amp; 4th</small></div>
+          </div>
+          <div class="art-card art-card-3 match">
+            <span aria-hidden="true">✨</span>
+            <div><strong>92% match</strong><small>Mochi ↔ sighting #A7</small></div>
+          </div>
+          <div class="art-blob"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- HOME: recent + how -->
+    <section class="section" data-view="home">
+      <div class="wrap">
+        <div class="section-head">
+          <h2>Recently reported near you</h2>
+          <button class="link-btn" data-nav="browse">See all reports →</button>
+        </div>
+        <div class="card-grid" id="homeRecent"></div>
+      </div>
+    </section>
+
+    <!-- MAP VIEW -->
+    <section class="section view-section" data-view="map" hidden>
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <h2>Live sighting map</h2>
+            <p class="muted">Every pin is a real report. Tap a pin to see details and matches.</p>
+          </div>
+          <div class="map-legend">
+            <span><i class="dot dot-lost"></i> Lost</span>
+            <span><i class="dot dot-found"></i> Found</span>
+            <span><i class="dot dot-reunited"></i> Reunited</span>
+          </div>
+        </div>
+        <div class="map-layout">
+          <div class="map-panel">
+            <div id="mapStage" class="map-stage" role="application" aria-label="Interactive pet sighting map"></div>
+          </div>
+          <aside class="map-side" id="mapSide">
+            <div class="map-side-empty">
+              <span aria-hidden="true">🗺️</span>
+              <p>Select a pin on the map to see the report and any likely matches.</p>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <!-- BROWSE VIEW -->
+    <section class="section view-section" data-view="browse" hidden>
+      <div class="wrap">
+        <div class="section-head">
+          <h2>Browse reports</h2>
+        </div>
+        <div class="filters" id="filters">
+          <input type="search" id="searchInput" class="input" placeholder="Search name, breed, color, area…" />
+          <div class="chip-row" id="statusChips">
+            <button class="chip is-active" data-filter-status="all">All</button>
+            <button class="chip" data-filter-status="lost">Lost</button>
+            <button class="chip" data-filter-status="found">Found</button>
+            <button class="chip" data-filter-status="reunited">Reunited</button>
+          </div>
+          <select class="input select" id="speciesSelect">
+            <option value="all">All species</option>
+            <option value="Dog">Dogs</option>
+            <option value="Cat">Cats</option>
+            <option value="Bird">Birds</option>
+            <option value="Rabbit">Rabbits</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+        <p class="result-count muted" id="resultCount"></p>
+        <div class="card-grid" id="browseGrid"></div>
+      </div>
+    </section>
+
+    <!-- HOW IT WORKS -->
+    <section class="section band" id="howSection" data-view="home">
+      <div class="wrap">
+        <div class="section-head center">
+          <h2>How PawFinder works</h2>
+        </div>
+        <div class="steps">
+          <div class="step">
+            <span class="step-num">1</span>
+            <h3>Report in a minute</h3>
+            <p>Add a photo, drop a pin where the pet was last seen, and describe them. No account needed.</p>
+          </div>
+          <div class="step">
+            <span class="step-num">2</span>
+            <h3>We match automatically</h3>
+            <p>Our matcher scores every lost report against every found sighting by species, color, and distance.</p>
+          </div>
+          <div class="step">
+            <span class="step-num">3</span>
+            <h3>Alert the neighborhood</h3>
+            <p>Generate a printable alert poster in one click and share it wherever your community looks.</p>
+          </div>
+          <div class="step">
+            <span class="step-num">4</span>
+            <h3>Mark reunited</h3>
+            <p>When a pet gets home, close the report so the map stays accurate and hopeful.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap footer-inner">
+      <div>
+        <span class="brand-mark" aria-hidden="true">🐾</span>
+        <strong>PawFinder</strong>
+        <p class="muted">A community-powered lost &amp; found pet network. Built for AnimalHack 2026.</p>
+      </div>
+      <p class="muted small">Demo data is stored locally in your browser. No real personal data is collected.</p>
+    </div>
+  </footer>
+
+  <!-- REPORT MODAL -->
+  <div class="modal" id="reportModal" hidden>
+    <div class="modal-backdrop" data-close-modal></div>
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="reportTitle">
+      <button class="modal-close" data-close-modal aria-label="Close">✕</button>
+      <h2 id="reportTitle">Report a pet</h2>
+      <form id="reportForm" class="report-form">
+        <div class="segmented" role="tablist" aria-label="Report type">
+          <label class="seg"><input type="radio" name="status" value="lost" checked /> <span>🔴 Lost pet</span></label>
+          <label class="seg"><input type="radio" name="status" value="found" /> <span>🟢 Found pet</span></label>
+        </div>
+
+        <div class="form-row">
+          <label class="field">
+            <span>Pet name <em class="opt">(if known)</em></span>
+            <input class="input" name="name" placeholder="e.g. Mochi" />
+          </label>
+          <label class="field">
+            <span>Species</span>
+            <select class="input" name="species" required>
+              <option value="Dog">Dog</option>
+              <option value="Cat">Cat</option>
+              <option value="Bird">Bird</option>
+              <option value="Rabbit">Rabbit</option>
+              <option value="Other">Other</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="form-row">
+          <label class="field">
+            <span>Breed / type</span>
+            <input class="input" name="breed" placeholder="e.g. Shiba Inu" />
+          </label>
+          <label class="field">
+            <span>Primary color</span>
+            <input class="input" name="color" placeholder="e.g. Tan & white" />
+          </label>
+        </div>
+
+        <label class="field">
+          <span>Description &amp; distinctive marks</span>
+          <textarea class="input" name="description" rows="2" placeholder="Collar, temperament, microchip, anything memorable…"></textarea>
+        </label>
+
+        <div class="form-row">
+          <label class="field">
+            <span>Last seen / found area</span>
+            <input class="input" name="area" placeholder="e.g. Maple Park" />
+          </label>
+          <label class="field">
+            <span>Date</span>
+            <input class="input" type="date" name="date" />
+          </label>
+        </div>
+
+        <div class="field">
+          <span>Drop a pin where the pet was last seen</span>
+          <div id="pickerStage" class="map-stage picker" role="application" aria-label="Click to place a location pin"></div>
+          <p class="muted small" id="pinHint">Click anywhere on the map to set the location.</p>
+        </div>
+
+        <div class="form-row">
+          <label class="field">
+            <span>Photo</span>
+            <input class="input" type="file" name="photo" accept="image/*" id="photoInput" />
+          </label>
+          <label class="field">
+            <span>Contact <em class="opt">(shown on report)</em></span>
+            <input class="input" name="contact" placeholder="e.g. text 555-0142" />
+          </label>
+        </div>
+        <div id="photoPreviewWrap" class="photo-preview" hidden><img id="photoPreview" alt="Selected pet photo preview" /></div>
+
+        <div class="form-actions">
+          <button type="button" class="btn btn-ghost" data-close-modal>Cancel</button>
+          <button type="submit" class="btn btn-primary">Post report</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- DETAIL MODAL -->
+  <div class="modal" id="detailModal" hidden>
+    <div class="modal-backdrop" data-close-modal></div>
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="detailTitle">
+      <button class="modal-close" data-close-modal aria-label="Close">✕</button>
+      <div id="detailBody"></div>
+    </div>
+  </div>
+
+  <!-- POSTER CANVAS (hidden, used for export) -->
+  <canvas id="posterCanvas" width="800" height="1000" hidden></canvas>
+
+  <div class="toast" id="toast" hidden></div>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

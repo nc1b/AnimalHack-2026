@@ -1,119 +1,62 @@
-# 🐾 PawFinder — Community Lost & Found Pet Network
+# 🐾 PawFinder — Hero Landing (Next.js + shadcn/ui)
 
-> Every lost pet deserves a way home.
+A polished marketing landing page for **PawFinder**, a community lost & found pet
+network, built for **[AnimalHack 2026](https://animalhack2026.devpost.com/)**.
 
-**PawFinder** turns the scattered "have you seen my dog?" posts spread across
-social media, flyers, and group chats into one living map. Report a lost or
-found animal in under a minute, and PawFinder's matching engine instantly
-surfaces the sightings most likely to be *your* pet — then lets you generate a
-printable alert poster to rally the neighborhood.
+Built with **Next.js (App Router) · TypeScript · Tailwind CSS · shadcn/ui · Framer Motion · lucide-react**.
 
-Built for **[AnimalHack 2026](https://animalhack2026.devpost.com/)** — an
-international hackathon for animal welfare and human–animal relationships.
+**🔗 Live:** https://pawfinder-animalhack.vercel.app
 
-**🔗 Live demo:** **https://pawfinder-animalhack.vercel.app**
+## Project structure
 
----
-
-## The problem
-
-Millions of pets go missing every year. The information that would reunite them
-is out there — a neighbor saw a scared tan dog under a bandstand, someone is
-feeding a friendly grey tabby by the laundromat — but it's fragmented across a
-dozen platforms and never connects with the frantic owner two streets away.
-There's no shared, structured, *matchable* place for "lost" and "found" to meet.
-
-## The solution
-
-PawFinder is a single, map-first network where:
-
-- **Reporting takes under a minute.** Add a photo, drop a pin where the pet was
-  last seen, describe them. No account required — lowering friction is the whole
-  point when every hour counts.
-- **Matching is automatic.** Every lost report is scored against every found
-  sighting by **species, color, breed, description, and geographic distance**,
-  and the strongest candidates are surfaced with a confidence percentage.
-- **Alerts spread fast.** One click generates a printable **alert poster** (PNG)
-  with the pet's photo, details, last-seen location, and contact info.
-- **The map stays hopeful.** When a pet gets home, mark the report **reunited**
-  so the community sees the wins.
-
-## Features
-
-| Feature | What it does |
-| --- | --- |
-| 🗺️ **Live sighting map** | Interactive neighborhood map; every pin is a report, color-coded lost / found / reunited. Tap a pin for details + matches. |
-| ⚡ **One-minute reporting** | Guided form with photo upload and a click-to-drop location pin. |
-| ✨ **Matching engine** | Scores lost↔found pairs on species, color, breed, description & distance; shows ranked matches with a confidence score. |
-| 🔎 **Browse & filter** | Full-text search plus filters by status and species. |
-| 🖼️ **Alert poster export** | Generates a shareable/printable PNG poster on a `<canvas>`. |
-| ✅ **Mark reunited** | Close the loop and celebrate reunions. |
-| 💾 **Persistent** | Reports persist in the browser via `localStorage`; ships with realistic seed data. |
-
-## How the matching works
-
-For a given report, PawFinder scans all **opposite-status** reports and scores
-each candidate (see [`app.js`](./app.js), `scoreMatch()`):
+This is a shadcn-style project. Components live under `@/components/ui` and shared
+utilities under `@/lib`, with the `@/*` path alias configured in `tsconfig.json`.
 
 ```
-species must match          → otherwise score 0
-+ base similarity           (same species)
-+ color token overlap       (e.g. "grey tabby" ↔ "grey striped")
-+ breed token overlap
-+ description / area overlap
-+ proximity                 (closer last-seen pins score higher)
-→ clamped to a 0–99% confidence, ranked, top matches shown
+app/
+  layout.tsx          # root layout (dark theme), metadata
+  page.tsx            # renders <HeroSection />
+  globals.css         # Tailwind + shadcn CSS variables (light/dark)
+components/ui/
+  hero-section-1.tsx  # the hero + sticky header (the integrated component)
+  button.tsx          # shadcn Button
+  animated-group.tsx  # Framer Motion staggered reveal wrapper
+  text-effect.tsx     # Framer Motion text animation helper
+lib/utils.ts          # cn() class-merge helper
+components.json        # shadcn config
+tailwind.config.ts     # Tailwind + shadcn theme tokens
 ```
 
-Example from the seed data: **Mochi** (lost Shiba Inu, red harness, Maple Park)
-matches a **found tan dog with a red harness under the Maple Park bandstand** at
-**73%**.
+### Why `/components/ui`
 
-## Tech
+shadcn/ui installs primitives into `components/ui` by convention, and the alias
+`@/components/ui` in `components.json` + `tsconfig.json` points there. Keeping this
+exact path means any component pasted from the shadcn registry (and its imports
+like `@/components/ui/button`) resolves without edits, and future
+`npx shadcn@latest add <component>` commands drop files in the right place.
 
-Deliberately **dependency-free and self-contained** — plain HTML, CSS, and
-vanilla JavaScript, no build step and no external requests. That makes it
-instant to load, easy to audit, resilient, and trivially deployable as a static
-site. The map is a hand-built inline SVG with an absolute-positioned marker
-layer; posters are rendered with the Canvas API; state lives in `localStorage`.
-
-```
-index.html    — structure & markup
-styles.css    — design system & responsive layout
-data.js       — seed reports
-app.js        — state, matching engine, map, modals, poster export
-vercel.json   — static hosting config
-```
-
-## Run locally
-
-No build needed. Serve the folder with any static server:
+## Getting started
 
 ```bash
-# Python
-python3 -m http.server 4321
-# or Node
-npx serve .
+npm install
+npm run dev     # http://localhost:3000
+npm run build   # production build
 ```
 
-Then open <http://localhost:4321>. To reset the demo data, run
-`PawFinder.reset()` in the browser console.
+## Dependencies
 
-## Deploy
+Runtime: `next`, `react`, `react-dom`, `framer-motion`, `lucide-react`,
+`@radix-ui/react-slot`, `class-variance-authority`, `clsx`, `tailwind-merge`,
+`tailwindcss-animate`.
 
-Static site — deploys as-is to Vercel, Netlify, GitHub Pages, or any static
-host. This project is configured for **Vercel** (`vercel.json`).
+## Notes on the integration
 
-## Roadmap
+- The pasted component targeted Tailwind v4; a few v4-only utilities were adapted
+  for the Tailwind v3.4 setup here (`aspect-[15/8]`, standard rings/shadows,
+  `group-data-*` variants).
+- Copy was adapted to the PawFinder theme, the brand mark uses a lucide
+  `PawPrint` icon, and imagery uses real Unsplash photos.
+- The mismatched tech-logo cloud from the template was replaced with an on-brand
+  stats band.
 
-- Real geolocation + map tiles and address geocoding
-- Photo similarity matching (breed/color from images)
-- Push/email alerts when a new report matches an open one
-- Shelter & vet-clinic integrations for intake scanning
-
-## About
-
-Created as a submission for **AnimalHack 2026**. Demo data is fictional and
-stored only in the visitor's browser — no personal data is collected.
-
-_🐾 Bring them home._
+Built for AnimalHack 2026. 🐾

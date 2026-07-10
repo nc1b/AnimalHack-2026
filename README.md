@@ -11,7 +11,7 @@ printable alert poster to rally the neighborhood.
 Built for **[AnimalHack 2026](https://animalhack2026.devpost.com/)** — an
 international hackathon for animal welfare and human–animal relationships.
 
-**🔗 Live demo:** _added after deploy — see below_
+**🔗 Live demo:** **https://pawfinder-animalhack.vercel.app**
 
 ---
 

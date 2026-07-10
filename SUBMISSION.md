@@ -4,7 +4,7 @@ Everything you need to finish the submission is here. Two things only **you**
 can do (they require *your* accounts): recording the Arcade video and clicking
 submit on Devpost + the Google Form. This kit makes both take ~15 minutes.
 
-> **Live project URL:** `__VERCEL_URL__`  ← _filled in after deploy; also in README._
+> **Live project URL:** https://pawfinder-animalhack.vercel.app  ← _deployed & verified live._
 > **GitHub repo:** https://github.com/nc1b/AnimalHack-2026 (branch `claude/animal-hack-2026-7iybv1`)
 
 ---
@@ -34,7 +34,7 @@ submit on Devpost + the Google Form. This kit makes both take ~15 minutes.
 **Presenter name / contact:** _<your name / email — momalmal4@proton.me>_
 
 **Public project link (must show the actual working outcome):**
-> `__VERCEL_URL__`
+> https://pawfinder-animalhack.vercel.app
 
 **"What it does" / "How we built it" (Devpost long description):** use the
 [README](./README.md) — the Problem, Solution, Features, and "How matching works"
@@ -52,7 +52,7 @@ Arcade account, but here's an exact recipe.
 
 **Setup**
 1. Log in at arcade.software → **New Arcade → Record → Chrome extension**.
-2. Open the live site: `__VERCEL_URL__`
+2. Open the live site: https://pawfinder-animalhack.vercel.app
 3. Record at 1280×800+ for a crisp result.
 
 **Shot list (≈75 seconds — hits every judging beat)**
@@ -75,7 +75,7 @@ Paste that link into Devpost's video field (Arcade links embed on Devpost).
 
 ## 3) Final submission checklist
 
-- [ ] Site is live at `__VERCEL_URL__` (open it once to confirm)
+- [ ] Site is live at https://pawfinder-animalhack.vercel.app (open it once to confirm)
 - [ ] Record the Arcade demo (recipe above) and publish it
 - [ ] Devpost: create the project, paste title/tagline/abstract, add the live
       link, the GitHub repo, and the Arcade video → **Submit** before the deadline
